@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.handler.EmptyInputException;
+import com.example.demo.dto.UserDto;
+
 import com.example.demo.handler.NotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.userservice.UserService;
@@ -31,14 +32,16 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	//UserValidation userValidation = new UserValidation();
+
 	@PostMapping("/save")
-	public ResponseEntity addUser(@RequestBody User user) throws EmptyInputException {
+	public ResponseEntity addUser(@RequestBody UserDto user) throws NotFoundException {
 		userService.addUser(user);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity updateUser(@RequestBody User user) throws EmptyInputException {
+	public ResponseEntity updateUser(@RequestBody UserDto user) throws NotFoundException {
 		userService.updateUser(user);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.handler.EmptyInputException;
+
+import com.example.demo.converter.UserConverter;
+import com.example.demo.dto.UserDto;
+//import com.example.demo.handler.EmptyInputException;
 import com.example.demo.handler.NotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -18,17 +21,26 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public User addUser(User user) throws EmptyInputException {
+	public User addUser(UserDto userDto) throws NotFoundException {
 
+		User user = UserConverter.dtoToEntity(userDto);
 		if (user.getUserName().isEmpty()) {
-			throw new EmptyInputException("Please enter Name");
-		} 
+			throw new NotFoundException("Please enter Name");
+		}
+		if(user.getUserName().length()<3) {
+			throw new NotFoundException("Name length should be more than 2 chracters");
+		}
 		return userRepository.insert(user);
 	}
 
-	public void updateUser(User user) throws EmptyInputException {
+	public void updateUser(UserDto userDto) throws NotFoundException {
+
+		User user = UserConverter.dtoToEntity(userDto);
 		if (user.getUserName().isEmpty()) {
-			throw new EmptyInputException("Please enter Name");
+			throw new NotFoundException("Please enter Name");
+		}
+		if(user.getUserName().length()<3) {
+			throw new NotFoundException("Name length should be more than 2 characters");
 		}
 
 		userRepository.save(user);
